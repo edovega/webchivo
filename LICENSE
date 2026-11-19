@@ -1,0 +1,32 @@
+MIT License
+
+Copyright (c) 2026 CIB-203 course maintainers
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+EDUCATIONAL-USE NOTICE
+
+This software is an intentionally vulnerable laboratory for teaching defensive
+and offensive security. It contains deliberate security flaws. Run it only on
+your own machine, bound to 127.0.0.1. All names, companies, institutions and
+records in it are fictional. Using the techniques it teaches against systems
+you are not authorized to test may be a crime.
+
+Pico CSS (app/html/vendor/pico/) is distributed under its own MIT license, see
+app/html/vendor/pico/LICENSE.md.

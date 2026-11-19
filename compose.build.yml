@@ -1,0 +1,32 @@
+# Local build override. Usage:
+#   cp .env.example .env    (only once, if .env does not exist)
+#   docker compose -f compose.yml -f compose.build.yml build --no-cache
+#
+# The build secret is the local .env. Lines FLAG_01 to FLAG_08 become the flags.
+# Without them the build uses the test flags. Always build app and db with
+# --no-cache after changing the flags: BuildKit does not include secret
+# contents in its cache key.
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: db/Dockerfile
+      secrets:
+        - ctf_flags
+
+  app:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+      secrets:
+        - ctf_flags
+
+  reviewer:
+    build:
+      context: .
+      dockerfile: reviewer/Dockerfile
+
+secrets:
+  ctf_flags:
+    file: ./.env

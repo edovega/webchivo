@@ -1,0 +1,20 @@
+# Local only: specification and solutions (never commit)
+/*.md
+!README.md
+spec/
+tests/smoke.sh
+
+# Flags and local configuration
+.env
+.env.*
+!.env.example
+*flags*
+!db/initdb/04_flags.sh
+*.local
+
+# Build and runtime leftovers
+seal.c
+*.o
+__pycache__/
+*.pyc
+.DS_Store

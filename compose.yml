@@ -1,0 +1,60 @@
+name: cib203-lab-web
+
+services:
+  db:
+    image: ghcr.io/${GHCR_OWNER:?set GHCR_OWNER in .env}/cib203-lab-web-db:${IMAGE_TAG:?set IMAGE_TAG in .env}
+    environment:
+      POSTGRES_DB: suppliers
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres-lab
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      # TCP on purpose: during first initialization the temporary server only
+      # listens on the Unix socket, so this stays unhealthy until the flags exist.
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "postgres", "-d", "suppliers"]
+      interval: 5s
+      timeout: 3s
+      retries: 60
+      start_period: 10s
+    networks:
+      - lab
+
+  app:
+    image: ghcr.io/${GHCR_OWNER:?set GHCR_OWNER in .env}/cib203-lab-web-app:${IMAGE_TAG:?set IMAGE_TAG in .env}
+    ports:
+      - "127.0.0.1:8080:80"
+    environment:
+      APP_LEVEL: ${APP_LEVEL:-vulnerable}
+      DB_HOST: db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - lab
+
+  reviewer:
+    image: ghcr.io/${GHCR_OWNER:?set GHCR_OWNER in .env}/cib203-lab-web-reviewer:${IMAGE_TAG:?set IMAGE_TAG in .env}
+    environment:
+      APP_URL: http://app
+      REVIEWER_INTERVAL: ${REVIEWER_INTERVAL:-60}
+      DB_HOST: db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    shm_size: 256m
+    # Reap Chromium's child processes so zombies do not accumulate across
+    # cycles over a long class session.
+    init: true
+    depends_on:
+      - app
+    networks:
+      - lab
+
+networks:
+  lab:
+    driver: bridge
+
+volumes:
+  db_data:

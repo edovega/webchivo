@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+.git
+.github
+tests/
+spec/
+*.md
+*flags*
+!db/initdb/04_flags.sh
+*.local
+seal.c
+**/.DS_Store
