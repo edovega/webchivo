@@ -19,3 +19,19 @@ jobs:
           bash scripts/check-ghcr-images.sh
           docker compose config --images
           docker compose pull
+      - name: Start lab and check HTTP availability
+        run: |
+          set -euo pipefail
+          trap 'docker compose down -v' EXIT
+          docker compose up -d --wait --wait-timeout 180
+          docker compose ps
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error --max-time 5 http://127.0.0.1:8080/ -o /dev/null; then
+              echo "Lab application responded successfully over HTTP."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Lab application did not return a successful HTTP response." >&2
+          docker compose logs --tail=100 app db reviewer >&2
+          exit 1
