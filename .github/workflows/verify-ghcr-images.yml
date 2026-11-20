@@ -1,0 +1,21 @@
+name: Verify published lab images
+
+on:
+  push:
+    branches: [main, "fix/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-images:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify all default image tags in GHCR
+        run: |
+          cp .env.example .env
+          bash scripts/check-ghcr-images.sh
+          docker compose config --images
+          docker compose pull
