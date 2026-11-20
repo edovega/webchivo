@@ -26,6 +26,7 @@ Laboratorio web de la semana 12 del curso CIB-203 Seguridad Defensiva y Ofensiva
 git clone https://github.com/wrodriguez-cenfotec/webchivo.git
 cd webchivo
 cp .env.example .env
+bash scripts/check-ghcr-images.sh
 docker compose pull
 docker compose up -d
 ```
@@ -37,6 +38,8 @@ Agregue esta línea a `/etc/hosts`:
 ```
 
 Luego abra `http://proveedores.lab:8080` en el navegador.
+
+Si `check-ghcr-images.sh` muestra `NOT FOUND OR INACCESSIBLE`, compruebe el valor de `IMAGE_TAG` en `.env` y los tags publicados en GitHub Packages. Un workflow exitoso sobre `main` publica `latest` y un tag `sha-*`, pero no crea por sí mismo una versión `v*`. No es necesario reconstruir imágenes locales para resolver un tag inexistente.
 
 ¿El portal no carga en el primer minuto? La base de datos se inicializa en el primer arranque. Espere un poco y revise el estado con `docker compose ps`.
 
@@ -124,7 +127,7 @@ La construcción lee las banderas desde `.env`. Sin líneas `FLAG_0N` usa bander
 ### Publicación
 
 1. Revise que `GHCR_OWNER` e `IMAGE_TAG` de `.env.example` sean correctos.
-2. Cree y suba una etiqueta igual a `IMAGE_TAG`:
+2. Si se va a publicar una versión `v*`, cree y suba una etiqueta igual a `IMAGE_TAG` (el ejemplo usa `v1.0.0`; no reutilice un tag existente):
 
    ```bash
    git tag v1.0.0
@@ -134,6 +137,16 @@ La construcción lee las banderas desde `.env`. Sin líneas `FLAG_0N` usa bander
 3. Cuando termine el flujo de trabajo, haga públicos los tres paquetes en GitHub Packages: `cib203-lab-web-app`, `cib203-lab-web-db` y `cib203-lab-web-reviewer`.
 
 ### Verificación antes de la clase
+
+En un clon limpio, copie `.env.example` a `.env` y compruebe que las referencias distribuidas a los estudiantes son descargables:
+
+```bash
+cp .env.example .env
+bash scripts/check-ghcr-images.sh
+docker compose pull
+```
+
+Si se modifica el tag recomendado, actualice `.env.example` **solo después** de confirmar la publicación de los tres manifiestos. Esta comprobación valida disponibilidad, no contenido ni banderas.
 
 ```bash
 seal/verify_image.sh
